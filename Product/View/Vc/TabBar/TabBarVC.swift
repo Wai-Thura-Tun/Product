@@ -61,7 +61,6 @@ class TabBarVC: UITabBarController {
             cartVC,
             profileVC
         ]
-        
         tabBar.backgroundColor = .black
     }
 }

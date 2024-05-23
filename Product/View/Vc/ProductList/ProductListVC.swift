@@ -43,7 +43,12 @@ class ProductListVC: UIViewController, StoryBoarded {
     }
     
     private func setUpBinding() {
-        
+        btnSearch.addTarget(self, action: #selector(onTapSearch), for: .touchUpInside)
+    }
+    
+    @objc func onTapSearch() {
+        let vc = ProductSearchVC.instantiate()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }
