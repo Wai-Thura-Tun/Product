@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProductResponse: Codable {
+struct ProductListResponse: Codable {
     let products: [ProductVO]
     let total: Int
     let skip: Int
@@ -35,3 +35,5 @@ struct ProductVO: Codable {
         case id, title, description, price, discountPercentage, rating, stock, brand, category, thumbnail, images
     }
 }
+
+typealias ProductSearchResponse = ProductListResponse

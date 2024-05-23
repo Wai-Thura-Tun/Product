@@ -12,7 +12,7 @@ class ProductRemoteDataSource {
     
     func getProducts(onSuccess: @escaping ([ProductVO]) -> (),
                      onFailed: @escaping (String) -> ()) {
-        network.request(endPoint: .GetProducts) { (response: ProductResponse) in
+        network.request(endPoint: .GetProducts) { (response: ProductListResponse) in
             onSuccess(response.products)
         } onFailed: { error in
             onFailed(error.customMessage)
@@ -27,6 +27,17 @@ class ProductRemoteDataSource {
         } onFailed: { error in
             onFailed(error.customMessage)
         }
-
+    }
+    
+    func searchProduct(searchQuery: String,
+                       onSuccess: @escaping ([ProductVO]) -> (),
+                       onFailed: @escaping (String) -> ()) {
+        network.request(endPoint: .SearchProduct(
+            ProductSearchRequest.init(search: searchQuery))
+        ) { (response: ProductSearchResponse) in
+            onSuccess(response.products)
+        } onFailed: { error in
+            onFailed(error.customMessage)
+        }
     }
 }
