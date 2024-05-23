@@ -17,7 +17,7 @@ class ProductCell: UICollectionViewCell {
         didSet {
             if let data = data {
                 imgProduct.setImage(imgURL: data.thumbnail)
-                lblPrice.text = "$ \(data.price ?? 0)"
+                lblPrice.text = "$ \(data.price?.toPrice(decimalPoint: 2) ?? "")"
                 lblName.text = data.title
             }
         }

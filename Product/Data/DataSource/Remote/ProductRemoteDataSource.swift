@@ -18,4 +18,15 @@ class ProductRemoteDataSource {
             onFailed(error.customMessage)
         }
     }
+    
+    func getProductDetail(id: Int,
+                          onSuccess: @escaping (ProductVO) -> (),
+                          onFailed: @escaping (String) -> ()) {
+        network.request(endPoint: .GetProductDetail(id)) { (response: ProductVO) in
+            onSuccess(response)
+        } onFailed: { error in
+            onFailed(error.customMessage)
+        }
+
+    }
 }

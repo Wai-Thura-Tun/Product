@@ -30,7 +30,6 @@ class ProductListVM {
     func getBooks() {
         repository.getProducts { [weak self] products in
             self?.products = products
-            print(products)
         } onFailed: { [weak self] error in
             self?.delegate.onError(error: error)
         }

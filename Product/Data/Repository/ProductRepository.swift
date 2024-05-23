@@ -14,4 +14,10 @@ class ProductRepository {
                      onFailed: @escaping (String) -> ()) {
         dataSource.getProducts(onSuccess: onSuccess, onFailed: onFailed)
     }
+    
+    func getProductDetail(id: Int, 
+                          onSuccess: @escaping (ProductVO) -> (),
+                          onFailed: @escaping (String) -> ()) {
+        dataSource.getProductDetail(id: id, onSuccess: onSuccess, onFailed: onFailed)
+    }
 }
