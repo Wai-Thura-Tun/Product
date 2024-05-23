@@ -12,7 +12,17 @@ class TabBarVC: UITabBarController {
     class CustomTabBar: UITabBar {
         override func sizeThatFits(_ size: CGSize) -> CGSize {
             var size = super.sizeThatFits(size)
-            size.height = 80
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                let screenHeight = UIScreen.main.bounds.height
+                switch screenHeight {
+                case (812..<926):
+                    size.height = 90
+                case let height where height >= 926:
+                    size.height = 100
+                default:
+                    size.height = 70
+                }
+            }
             return size
         }
     }
@@ -54,6 +64,4 @@ class TabBarVC: UITabBarController {
         
         tabBar.backgroundColor = .black
     }
-    
-    
 }

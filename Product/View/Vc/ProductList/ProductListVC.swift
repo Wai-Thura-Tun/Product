@@ -62,7 +62,12 @@ extension ProductListVC: UICollectionViewDataSource {
 }
 
 extension ProductListVC: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let productId = vm.products[indexPath.row].id
+        let vc = ProductDetailVC.instantiate()
+        vc.productId = productId
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension ProductListVC: UICollectionViewDelegateFlowLayout {
