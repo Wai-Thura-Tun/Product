@@ -7,25 +7,81 @@
 
 import UIKit
 
-class TabBarVC: UITabBarController {
+class CustomTabBar: UITabBar {
+    private var shapeLayer: CALayer?
+    
+    override func draw(_ rect: CGRect) {
+        self.addShape()
+    }
 
-    class CustomTabBar: UITabBar {
-        override func sizeThatFits(_ size: CGSize) -> CGSize {
-            var size = super.sizeThatFits(size)
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                let screenHeight = UIScreen.main.bounds.height
-                switch screenHeight {
-                case (812..<926):
-                    size.height = 90
-                case let height where height >= 926:
-                    size.height = 100
-                default:
-                    size.height = 70
-                }
-            }
-            return size
+    private func addShape() {
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = createPath()
+        shapeLayer.strokeColor = UIColor.black.cgColor
+        shapeLayer.fillColor = UIColor.black.cgColor
+        shapeLayer.lineWidth = 1.0
+
+        if let oldShapeLayer = self.shapeLayer {
+            self.layer.replaceSublayer(oldShapeLayer, with: shapeLayer)
+        } else {
+            self.layer.insertSublayer(shapeLayer, at: 0)
+        }
+        self.shapeLayer = shapeLayer
+    }
+
+    private func createPath() -> CGPath {
+        let path = UIBezierPath()
+        let actualWidth = self.frame.width
+        let actualHeight = self.frame.height
+        let curvedWidth: CGFloat = actualWidth * 0.7
+        let widthX = (actualWidth - curvedWidth) / 2
+        let widthY = (actualWidth + curvedWidth) / 2
+        let heightX = 10
+        let heightY = self.frame.height - 20
+        let totalTabBarHeight = actualHeight - 10 - 20
+            
+        path.move(to: CGPoint(x: Int(widthX), y: Int(heightX)))
+        path.addLine(to: CGPoint(x: Int(widthY), y: Int(heightX)))
+        path.addLine(to: CGPoint(x: Int(widthX), y: Int(heightY)))
+        path.addArc(withCenter: CGPoint(
+            x: Int(widthY),
+            y: Int((totalTabBarHeight / 2) + 10)),
+            radius: totalTabBarHeight / 2,
+            startAngle: -.pi/2,
+            endAngle: .pi/2,
+            clockwise: true)
+
+        path.addArc(withCenter: CGPoint(
+            x: Int(widthX),
+            y: Int((totalTabBarHeight / 2) + 10)),
+            radius: totalTabBarHeight / 2,
+            startAngle: .pi/2,
+            endAngle: -.pi/2,
+            clockwise: true)
+        
+        path.close()
+        return path.cgPath
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+            
+        let totalItems = CGFloat(items?.count ?? 0)
+        let itemWidth = self.frame.width * 0.8 / totalItems
+        let itemHeight = self.frame.height
+        var itemX: CGFloat = (self.frame.width - (itemWidth * totalItems)) / 2
+        for item in subviews where item is UIControl {
+            item.frame = CGRect(x: itemX, y: 0, width: itemWidth, height: itemHeight)
+            itemX += itemWidth
+        }
+        
+        for view in self.subviews where view is UIControl {
+            self.bringSubviewToFront(view)
         }
     }
+}
+
+class TabBarVC: UITabBarController {
     
     private var productListVC: ProductListVC {
         return ProductListVC.instantiate()
@@ -45,7 +101,7 @@ class TabBarVC: UITabBarController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        object_setClass(self.tabBar, CustomTabBar.self)
+        self.setValue(CustomTabBar(), forKey: "tabBar")
     }
     
     required init?(coder: NSCoder) {
@@ -61,6 +117,5 @@ class TabBarVC: UITabBarController {
             cartVC,
             profileVC
         ]
-        tabBar.backgroundColor = .black
     }
 }

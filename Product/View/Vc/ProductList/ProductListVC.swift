@@ -10,6 +10,7 @@ import UIKit
 class ProductListVC: UIViewController, StoryBoarded {
 
     @IBOutlet weak var cvProductList: UICollectionView!
+    @IBOutlet weak var loading: UIActivityIndicatorView!
     @IBOutlet weak var btnSetting: UIButton!
     @IBOutlet weak var btnSearch: UIButton!
     
@@ -29,6 +30,7 @@ class ProductListVC: UIViewController, StoryBoarded {
 
         setUpView()
         setUpBinding()
+        loading.startAnimating()
         vm.getBooks()
     }
     
@@ -48,7 +50,7 @@ class ProductListVC: UIViewController, StoryBoarded {
     
     @objc func onTapSearch() {
         let vc = ProductSearchVC.instantiate()
-        navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
 }
@@ -95,11 +97,14 @@ extension ProductListVC: UICollectionViewDelegateFlowLayout {
 extension ProductListVC: ProductListViewDelegate {
     func onLoadProducts() {
         DispatchQueue.main.async { [weak self] in
+            self?.loading.stopAnimating()
             self?.cvProductList.reloadData()
         }
     }
     
     func onError(error: String) {
-        
+        DispatchQueue.main.async { [weak self] in
+            self?.loading.stopAnimating()
+        }
     }
 }
